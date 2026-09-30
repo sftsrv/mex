@@ -21,7 +21,7 @@ Pipe this into ` + "`mex commit`" + ` to save
 console.log("hello");
 ` + "`````" + `
 
-` + "`````" + `html my/project/template.html:45-50
+` + "`````" + `html my/project/template.html:5-10
 <h1>Hello world</h1>
 <style>
   .some-style, h1 {
@@ -36,12 +36,29 @@ my/project/route.ts:2: * This is some stuff
 my/project/route.ts:3: * @example
 my/project/route.ts:4: */
 my/project/route.ts:5:console.log("hello");
-my/project/template.html:45:<h1>Hello world</h1>
-my/project/template.html:46:<style>
-my/project/template.html:47:  .some-style, h1 {
-my/project/template.html:48:    background-color: red;
-my/project/template.html:49:  }
-my/project/template.html:50:</style>
+my/project/template.html:5:<h1>Hello world</h1>
+my/project/template.html:6:<style>
+my/project/template.html:7:  .some-style, h1 {
+my/project/template.html:8:    background-color: red;
+my/project/template.html:9:  }
+my/project/template.html:10:</style>
+`
+
+const file = `1 some file
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+15
+14
+15
 `
 
 func TestMdFormat(t *testing.T) {
@@ -88,4 +105,25 @@ func TestParseFromMdAndGrep(t *testing.T) {
 	if diff := cmp.Diff(fromMd, fromGrep); diff != "" {
 		t.Errorf("Parsing from md is not the same as from grep:\n%s", diff)
 	}
+}
+
+func TestApplyRegions(t *testing.T) {
+	regions := []pkg.Region{
+		pkg.Region{
+			Path:    "my/project/route.ts",
+			Start:   5,
+			End:     7,
+			Content: "[start]This replaces the more\n lines\n than were in in\nthe original region[end]\n",
+		},
+		pkg.Region{
+			Path:    "my/project/route.ts",
+			Start:   10,
+			End:     12,
+			Content: "[start]This replaces the same number\nof lines as in\nthe original region[end]\n",
+		},
+	}
+
+	result := pkg.ApplyRegions(file, regions)
+
+	cupaloy.SnapshotT(t, result)
 }

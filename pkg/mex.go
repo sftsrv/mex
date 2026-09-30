@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// Line numbers are 1-indexed as this is convention
 type Region struct {
 	Path    string
 	Start   int
@@ -137,4 +138,34 @@ func ToMdBlocks(regions []Region) string {
 	}
 
 	return md
+}
+
+func ApplyRegions(content string, regions []Region) string {
+	grouped := map[int]Region{}
+
+	for r := range regions {
+		region := regions[r]
+		grouped[region.Start] = region
+	}
+
+	lines := slices.Collect(strings.Lines(content))
+	output := ""
+
+	i := 0
+	for i < len(lines) {
+		n := i + 1
+
+		region, exists := grouped[n]
+
+		if exists {
+			output += region.Content
+			i = region.End
+		} else {
+			output += lines[i]
+			i++
+		}
+
+	}
+
+	return output
 }

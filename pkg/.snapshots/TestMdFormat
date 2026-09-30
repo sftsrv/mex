@@ -10,7 +10,7 @@ Pipe this into `mex commit` to save
 console.log("hello");
 `````
 
-`````html my/project/template.html:45-50
+`````html my/project/template.html:5-10
 <h1>Hello world</h1>
 <style>
   .some-style, h1 {

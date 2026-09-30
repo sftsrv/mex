@@ -1,0 +1,17 @@
+1 some file
+2
+3
+4
+[start]This replaces the more
+ lines
+ than were in in
+the original region[end]
+8
+9
+[start]This replaces the same number
+of lines as in
+the original region[end]
+15
+14
+15
+
