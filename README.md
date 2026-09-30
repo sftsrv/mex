@@ -2,6 +2,12 @@
 
 A tool for applying patches using Markdown for readability
 
+## Installation
+
+```sh
+go install github.com/sftsrv/mex
+```
+
 ## Usage
 
 ### Interactively
