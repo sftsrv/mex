@@ -1,0 +1,13 @@
+
+my/project/route.ts:1:/**
+my/project/route.ts:2: * This is some stuff
+my/project/route.ts:3: * @example
+my/project/route.ts:4: */
+my/project/route.ts:5:console.log("hello");
+my/project/template.html:45:<h1>Hello world</h1>
+my/project/template.html:46:<style>
+my/project/template.html:47:  .some-style, h1 {
+my/project/template.html:48:    background-color: red;
+my/project/template.html:49:  }
+my/project/template.html:50:</style>
+
