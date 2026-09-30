@@ -10,6 +10,8 @@ Pipe this into `mex commit` to save
 console.log("hello");
 `````
 
+Here are some general comments that should be excluded from the changeset
+
 `````html my/project/template.html:5-10
 <h1>Hello world</h1>
 <style>
@@ -18,3 +20,6 @@ console.log("hello");
   }
 </style>
 `````
+
+And here are some more comments
+

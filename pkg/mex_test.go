@@ -21,6 +21,8 @@ Pipe this into ` + "`mex commit`" + ` to save
 console.log("hello");
 ` + "`````" + `
 
+Here are some general comments that should be excluded from the changeset
+
 ` + "`````" + `html my/project/template.html:5-10
 <h1>Hello world</h1>
 <style>
@@ -28,7 +30,10 @@ console.log("hello");
     background-color: red;
   }
 </style>
-` + "`````"
+` + "`````" + `
+
+And here are some more comments
+`
 
 const grep = `
 my/project/route.ts:1:/**
@@ -109,13 +114,13 @@ func TestParseFromMdAndGrep(t *testing.T) {
 
 func TestApplyRegions(t *testing.T) {
 	regions := []pkg.Region{
-		pkg.Region{
+		{
 			Path:    "my/project/route.ts",
 			Start:   5,
 			End:     7,
 			Content: "[start]This replaces the more\n lines\n than were in in\nthe original region[end]\n",
 		},
-		pkg.Region{
+		{
 			Path:    "my/project/route.ts",
 			Start:   10,
 			End:     12,

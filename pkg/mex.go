@@ -56,6 +56,10 @@ func FromGrep(content string) ([]Region, error) {
 func parseGrepLine(lineRe *regexp.Regexp, line string) (Region, error) {
 	parts := lineRe.FindStringSubmatch(line)
 
+	if len(parts) < 4 {
+		return Region{}, fmt.Errorf("Unexpected metadata line: %s\n\nMake sure you run grep with the -H and -n flags to include the file name and line number", line)
+	}
+
 	path := parts[1]
 	num, err := strconv.Atoi(parts[2])
 	content := parts[3] + "\n"
@@ -76,16 +80,20 @@ func parseGrepLine(lineRe *regexp.Regexp, line string) (Region, error) {
 }
 
 func FromMd(content string) ([]Region, error) {
-	blockRe := regexp.MustCompile("`````\\w+ ")
+	startRe := regexp.MustCompile("`````\\w+ ")
+	endSep := "\n`````"
 
-	blocks := blockRe.Split(content, -1)[1:]
+	blocks := startRe.Split(content, -1)[1:]
 
 	regions := make([]Region, len(blocks))
 
 	for b := range blocks {
-		block := slices.Collect(strings.Lines(strings.TrimSpace(blocks[b])))
+		block := strings.Split(blocks[b], endSep)
+		if len(block) < 1 {
+			continue
+		}
 
-		region, err := parseMdBlock(block)
+		region, err := parseMdBlock(block[0] + endSep)
 		if err != nil {
 			return regions, err
 		}
@@ -97,14 +105,15 @@ func FromMd(content string) ([]Region, error) {
 	return regions, nil
 }
 
-func parseMdBlock(lines []string) (Region, error) {
+func parseMdBlock(block string) (Region, error) {
+	lines := slices.Collect(strings.Lines(block))
+
 	meta := strings.TrimSpace(lines[0])
 	content := strings.Join(lines[1:(len(lines)-1)], "")
 
 	pathRange := strings.SplitN(meta, ":", 2)
 	path := pathRange[0]
 
-	fmt.Println(pathRange)
 	ranges := strings.SplitN(pathRange[1], "-", 2)
 	start, err := strconv.Atoi(ranges[0])
 
@@ -133,11 +142,15 @@ func ToMdBlocks(regions []Region) string {
 	for r := range regions {
 		region := regions[r]
 
-		ext := path.Ext(region.Path)
-		md += fmt.Sprintf("`````%s %s:%d-%d\n%s\n`````", ext, region.Path, region.Start, region.End, region.Content)
+		ext := strings.Replace(path.Ext(region.Path), ".", "", 1)
+		md += fmt.Sprintf("`````%s %s:%d-%d\n%s`````\n\n", ext, region.Path, region.Start, region.End, region.Content)
 	}
 
 	return md
+}
+
+func ToMdFile(title string, note string, regions []Region) string {
+	return fmt.Sprintf("# %s\n\n> %s\n\n%s", title, note, ToMdBlocks(regions))
 }
 
 func ApplyRegions(content string, regions []Region) string {
