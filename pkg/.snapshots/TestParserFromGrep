@@ -1,0 +1,14 @@
+([]pkg.Region) (len=2) {
+  (pkg.Region) {
+    Path: (string) (len=19) "my/project/route.ts",
+    Start: (int) 1,
+    End: (int) 5,
+    Content: (string) (len=67) "/**\\n * This is some stuff\\n * @example\\n */\\nconsole.log(\"hello\");"
+  },
+  (pkg.Region) {
+    Path: (string) (len=24) "my/project/template.html",
+    Start: (int) 1,
+    End: (int) 6,
+    Content: (string) (len=93) "<h1>Hello world</h1>\\n<style>\\n  .some-style, h1 {\\n    background-color: red;\\n  }\\n</style>"
+  }
+}
