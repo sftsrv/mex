@@ -12,7 +12,7 @@ import (
 
 const usage = `mex
 
-A tool for applying multi-buffer style patches using Markdown for readability
+A tool for applying patches using Markdown for readability
 
 ## Usage
 
