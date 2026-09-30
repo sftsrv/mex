@@ -142,11 +142,20 @@ func ToMdBlocks(regions []Region) string {
 	for r := range regions {
 		region := regions[r]
 
-		ext := strings.Replace(path.Ext(region.Path), ".", "", 1)
+		ext := getExt(region.Path)
 		md += fmt.Sprintf("`````%s %s:%d-%d\n%s`````\n\n", ext, region.Path, region.Start, region.End, region.Content)
 	}
 
 	return md
+}
+
+func getExt(p string) string {
+	ext := path.Ext(p)
+	if ext == "" {
+		return "txt"
+	}
+
+	return ext[1:]
 }
 
 func ToMdFile(title string, note string, regions []Region) string {
