@@ -17,13 +17,19 @@ type Region struct {
 	Content string
 }
 
+const contextFileMarker = "--"
+
 func FromGrep(content string) ([]Region, error) {
-	lineRe := regexp.MustCompile(`(.+):(\d+):(.*)`)
+	lineRe := regexp.MustCompile(`(.+)[:-](\d+)[:-](.*)`)
 
 	lines := strings.Lines(strings.TrimSpace(content))
 
 	regions := []Region{}
 	for line := range lines {
+		if strings.TrimSpace(line) == contextFileMarker {
+			continue
+		}
+
 		current, err := parseGrepLine(lineRe, line)
 
 		if err != nil {

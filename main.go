@@ -25,6 +25,14 @@ grep -r -n -H my-search | mex edit
 
 # another search command that outputs the same structure as grep may also be used, e.g. ripgrep
 rg -n -H my-search | mex edit
+
+# or with ast-grep
+ast-grep -p "data.name" | mex edit
+
+# or including serching with additional line context
+grep -r -n -H -C 2 my-search | mex edit
+rg -n -H -C 2 my-search | mex edit
+ast-grep -p "data.name" -C 2 | mex edit
 '''
 
 Saving the file and closing your editor will apply the changes

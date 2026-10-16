@@ -49,6 +49,21 @@ my/project/template.html:9:  }
 my/project/template.html:10:</style>
 `
 
+const grepContext = `
+my/project/route.ts-1-/**
+my/project/route.ts-2- * This is some stuff
+my/project/route.ts:3: * @example
+my/project/route.ts-4- */
+my/project/route.ts:5:console.log("hello");
+--
+my/project/template.html-5-<h1>Hello world</h1>
+my/project/template.html-6-<style>
+my/project/template.html:7:  .some-style, h1 {
+my/project/template.html:8:    background-color: red;
+my/project/template.html:9:  }
+my/project/template.html-10-</style>
+`
+
 const file = `1 some file
 2
 3
@@ -74,6 +89,10 @@ func TestGrepFormat(t *testing.T) {
 	cupaloy.SnapshotT(t, grep)
 }
 
+func TestRipgrepFormat(t *testing.T) {
+	cupaloy.SnapshotT(t, grepContext)
+}
+
 func TestParseFromMd(t *testing.T) {
 	parsed, err := pkg.FromMd(md)
 
@@ -86,6 +105,16 @@ func TestParseFromMd(t *testing.T) {
 
 func TestParserFromGrep(t *testing.T) {
 	parsed, err := pkg.FromGrep(grep)
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	cupaloy.SnapshotT(t, parsed)
+}
+
+func TestParserFromGrepWithContext(t *testing.T) {
+	parsed, err := pkg.FromGrep(grepContext)
 
 	if err != nil {
 		t.Error(err)
